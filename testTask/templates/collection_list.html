@@ -1,0 +1,10 @@
+<h1>Your Collections</h1>
+<ul>
+    {% for collection in collections %}
+        <li>{{ collection.name }} - {{ collection.description }}</li>
+    {% empty %}
+        <li>No collections available.</li>
+    {% endfor %}
+</ul>
+<a href="{% url 'collection-create' %}">Create New Collection</a>
+<a href="{% url 'home' %}">Return to Main page</a>

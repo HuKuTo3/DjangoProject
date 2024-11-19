@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <h1>Welcome, {{ request.user.username }}!</h1>
+
+    <h2>Your Collections</h2>
+    <a href="{% url 'collection-create' %}">Create New Collection</a>
+    {% if collections %}
+        <ul>
+            {% for collection in collections %}
+                <li>
+                    <strong>{{ collection.name }}</strong>: {{ collection.description }}
+                    <div>
+                        <small>Created: {{ collection.created_at|date:"Y-m-d H:i" }}</small>
+                        <small>Last Modified: {{ collection.updated_at|date:"Y-m-d H:i" }}</small>
+                    </div>
+                    <ul>
+                        {% for link in collection.links.all %}
+                            <li>
+                                <a href="{{ link.url }}" target="_blank">{{ link.title }}</a>
+                                <div>
+                                    <small>Created: {{ link.created_at|date:"Y-m-d H:i" }}</small>
+                                    <small>Last Modified: {{ link.updated_at|date:"Y-m-d H:i" }}</small>
+                                </div>
+                                <form action="{% url 'collection-remove-link' collection.id link.id %}" method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit">Remove from Collection</button>
+                                </form>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <a href="{% url 'collection-edit' collection.id %}">Edit Collection</a>
+                    <a href="{% url 'collection-delete' collection.id %}">Delete Collection</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have no collections yet.</p>
+    {% endif %}
+
+    <h2>Your Links</h2>
+    <a href="{% url 'link-create' %}">Add New Link</a>
+    {% if links %}
+        <ul>
+            {% for link in links %}
+                <li>
+                    <a href="{{ link.url }}" target="_blank">{{ link.title }}</a>
+                    ({{ link.type }}) - {{ link.description }}
+                    <div>
+                        <small>Created: {{ link.created_at|date:"Y-m-d H:i" }}</small>
+                        <small>Last Modified: {{ link.updated_at|date:"Y-m-d H:i" }}</small>
+                    </div>
+                    <a href="{% url 'link-edit' link.id %}">Edit</a>
+                    <a href="{% url 'link-delete' link.id %}">Delete</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have no links yet.</p>
+    {% endif %}
+
+    <a href="{% url 'password_change' %}">Change Password</a>
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+</body>
+</html>

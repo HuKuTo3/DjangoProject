@@ -1,0 +1,10 @@
+<h1>Your Links</h1>
+<ul>
+    {% for link in links %}
+        <li><a href="{{ link.url }}">{{ link.title }}</a> - {{ link.description }}</li>
+    {% empty %}
+        <li>No links available.</li>
+    {% endfor %}
+</ul>
+<a href="{% url 'link-create' %}">Create New Link</a>
+<a href="{% url 'home' %}">Return to Main page</a>
