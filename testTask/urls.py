@@ -1,9 +1,22 @@
 from django.contrib.auth.views import PasswordChangeDoneView
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth import views as auth_views
+from rest_framework.routers import DefaultRouter
 from .views import *
+from .api_views import LinkViewSet, CollectionViewSet, UserViewSet, login_view
+
+# Create a router and register our viewsets with it.
+router = DefaultRouter()
+router.register(r'api/users', UserViewSet, basename='api-user')
+router.register(r'api/links', LinkViewSet, basename='api-link')
+router.register(r'api/collections', CollectionViewSet, basename='api-collection')
 
 urlpatterns = [
+    # API URLs
+    path('', include(router.urls)),
+    path('api/login/', login_view, name='api-login'),
+    
+    # Existing URLs
     path('home', HomeView.as_view(), name='home'),
 
     # Смена пароля
@@ -35,5 +48,4 @@ urlpatterns = [
     path('collections/<int:pk>/edit/', CollectionUpdateView.as_view(), name='collection-edit'),
     path('collections/<int:pk>/delete/', CollectionDeleteView.as_view(), name='collection-delete'),
     path('collections/<int:collection_id>/remove-link/<int:link_id>/', CollectionRemoveLinkView.as_view(), name='collection-remove-link'),
-
 ]

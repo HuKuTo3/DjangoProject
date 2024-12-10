@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
 from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
 
 class Collection(models.Model):
     name = models.CharField(max_length=255)
