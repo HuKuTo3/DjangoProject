@@ -1,23 +1,148 @@
-<h1>{% if link %}Edit Link{% else %}Add New Link{% endif %}</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if link %}Edit{% else %}Add New{% endif %} Link - LinkManager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+        .form-card {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            background: white;
+        }
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .form-header i {
+            font-size: 3rem;
+            color: #198754;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+            border-color: #198754;
+        }
+        .errorlist {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0;
+            color: #dc3545;
+            font-size: 0.875rem;
+        }
+        .collections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .collection-check {
+            padding: 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+        .collection-check:hover {
+            background-color: #f8f9fa;
+        }
+        .collection-check input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-card">
+            <div class="form-header">
+                <i class="bi bi-link-45deg mb-3"></i>
+                <h1 class="h3">{% if link %}Edit Link{% else %}Add New Link{% endif %}</h1>
+                <p class="text-muted">{% if link %}Update your link details{% else %}Add a new link to your collection{% endif %}</p>
+            </div>
 
-<form method="POST">
-    {% csrf_token %}
-    {{ form.non_field_errors }}
-    {{ form.as_p }}
+            <form method="POST">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                
+                {% for field in form %}
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        {{ field.errors }}
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi {% if field.name == 'title' %}bi-type
+                                         {% elif field.name == 'url' %}bi-link
+                                         {% elif field.name == 'type' %}bi-tag
+                                         {% else %}bi-card-text{% endif %}"></i>
+                            </span>
+                            {% if field.name == 'description' %}
+                                <textarea name="{{ field.name }}" id="{{ field.id_for_label }}" 
+                                          class="form-control" rows="3">{{ field.value|default:'' }}</textarea>
+                            {% elif field.name == 'type' %}
+                                {{ field }}
+                            {% else %}
+                                <input type="{% if field.name == 'url' %}url{% else %}text{% endif %}" 
+                                       name="{{ field.name }}" 
+                                       id="{{ field.id_for_label }}" 
+                                       class="form-control"
+                                       value="{{ field.value|default:'' }}">
+                            {% endif %}
+                        </div>
+                        {% if field.help_text %}
+                            <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
 
-    {% if unlinked_collections.exists %}
-        <div>
-            <label for="collections">Add In Collections:</label>
-            {% for collection in unlinked_collections %}
-                <div>
-                    <input type="checkbox" name="collections" value="{{ collection.id }}" id="collection-{{ collection.id }}">
-                    <label for="collection-{{ collection.id }}">{{ collection.name }}</label>
+                {% if unlinked_collections.exists %}
+                    <div class="mb-4">
+                        <label class="form-label">Add to Collections:</label>
+                        <div class="collections-grid">
+                            {% for collection in unlinked_collections %}
+                                <div class="collection-check">
+                                    <div class="form-check">
+                                        <input type="checkbox" name="collections" 
+                                               value="{{ collection.id }}" 
+                                               id="collection-{{ collection.id }}"
+                                               class="form-check-input">
+                                        <label class="form-check-label" for="collection-{{ collection.id }}">
+                                            {{ collection.name }}
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-2"></i>Back
+                    </a>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save me-2"></i>Save Link
+                    </button>
                 </div>
-            {% endfor %}
+            </form>
         </div>
-    {% endif %}
+    </div>
 
-    <button type="submit">Save Link</button>
-</form>
-
-<a href="{% url 'link-list' %}">Back to Links</a>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add Bootstrap classes to select fields
+            document.querySelectorAll('select').forEach(function(select) {
+                select.classList.add('form-select');
+            });
+        });
+    </script>
+</body>
+</html>

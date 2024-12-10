@@ -3,16 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login - LinkManager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-card {
+            max-width: 400px;
+            width: 90%;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            background: white;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .login-header i {
+            font-size: 3rem;
+            color: #0d6efd;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+            border-color: #0d6efd;
+        }
+    </style>
 </head>
 <body>
-    <h1>Login</h1>
-    <form method="POST" action="{% url 'login' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a href="{% url 'register' %}">Register</a></p>
-    <a href="{% url 'password_reset' %}">Forgot your password?</a>
+    <div class="login-card">
+        <div class="login-header">
+            <i class="bi bi-link-45deg mb-3"></i>
+            <h1 class="h3">Welcome Back</h1>
+            <p class="text-muted">Sign in to your account</p>
+        </div>
+        
+        <form method="POST" action="{% url 'login' %}">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="mb-3">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field.errors }}
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi {% if field.name == 'username' %}bi-person{% else %}bi-key{% endif %}"></i>
+                        </span>
+                        {{ field }}
+                    </div>
+                </div>
+            {% endfor %}
+            
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                </button>
+            </div>
+        </form>
+        
+        <div class="mt-4 text-center">
+            <p class="mb-2">
+                Don't have an account? 
+                <a href="{% url 'register' %}" class="text-decoration-none">Register</a>
+            </p>
+            <a href="{% url 'password_reset' %}" class="text-decoration-none">
+                <i class="bi bi-question-circle me-1"></i>Forgot your password?
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add Bootstrap classes to form fields
+            document.querySelectorAll('input').forEach(function(input) {
+                input.classList.add('form-control');
+            });
+        });
+    </script>
 </body>
 </html>

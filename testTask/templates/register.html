@@ -3,14 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Registration</title>
+    <title>Register - LinkManager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .register-card {
+            max-width: 500px;
+            width: 90%;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            background: white;
+        }
+        .register-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .register-header i {
+            font-size: 3rem;
+            color: #198754;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+            border-color: #198754;
+        }
+        .help-text {
+            font-size: 0.875rem;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+        .errorlist {
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0;
+            color: #dc3545;
+            font-size: 0.875rem;
+        }
+    </style>
 </head>
 <body>
-    <h1>User Registration</h1>
-    <form method="POST" action="{% url 'register' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register</button>
-    </form>
+    <div class="register-card">
+        <div class="register-header">
+            <i class="bi bi-person-plus mb-3"></i>
+            <h1 class="h3">Create Account</h1>
+            <p class="text-muted">Join LinkManager today</p>
+        </div>
+        
+        <form method="POST" action="{% url 'register' %}">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="mb-3">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    {{ field.errors }}
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="bi {% if field.name == 'username' %}bi-person
+                                     {% elif 'password' in field.name %}bi-key
+                                     {% else %}bi-envelope{% endif %}"></i>
+                        </span>
+                        {{ field }}
+                    </div>
+                    {% if field.help_text %}
+                        <div class="help-text">{{ field.help_text }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-success">
+                    <i class="bi bi-person-plus me-2"></i>Create Account
+                </button>
+            </div>
+        </form>
+        
+        <div class="mt-4 text-center">
+            <p class="mb-0">
+                Already have an account? 
+                <a href="{% url 'login' %}" class="text-decoration-none">Sign In</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add Bootstrap classes to form fields
+            document.querySelectorAll('input').forEach(function(input) {
+                input.classList.add('form-control');
+            });
+        });
+    </script>
 </body>
 </html>
