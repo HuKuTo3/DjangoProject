@@ -120,6 +120,9 @@
                     {% for link in links %}
                         <div class="card link-card">
                             <div class="card-body">
+                                {% if link.image %}
+                                    <img src="{{ link.image }}" alt="{{ link.title }}" style="height: 100px; width: auto;" class="img-fluid mb-2">
+                                {% endif %}
                                 <h5 class="card-title">
                                     <a href="{{ link.url }}" target="_blank" class="text-decoration-none">
                                         {{ link.title }}
