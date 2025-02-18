@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from testTask.models import Collection, Link
+from test_task.models import Collection, Link
 
 
 class UserRegistrationForm(forms.ModelForm):

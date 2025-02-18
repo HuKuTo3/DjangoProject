@@ -5,4 +5,4 @@ python manage.py makemigrations
 python manage.py migrate
 
 echo "Starting Gunicorn server"
-gunicorn djangoProject.wsgi:application -c gunicorn.conf.py
+gunicorn django_project.wsgi:application -c gunicorn.conf.py
