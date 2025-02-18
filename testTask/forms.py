@@ -22,19 +22,23 @@ class UserRegistrationForm(forms.ModelForm):
 
         return cleaned_data
 
+
 class UserLoginForm(forms.Form):
     username = forms.CharField(max_length=255)
     password = forms.CharField(widget=forms.PasswordInput)
+
 
 class CollectionForm(forms.ModelForm):
     class Meta:
         model = Collection
         fields = ['name', 'description']
 
+
 class LinkForm(forms.ModelForm):
     class Meta:
         model = Link
         fields = ['url']
+
 
 class LinkUpdateForm(forms.ModelForm):
     class Meta:

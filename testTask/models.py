@@ -1,8 +1,7 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.conf import settings
 from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
 
 
 class Collection(models.Model):
@@ -39,6 +38,7 @@ class Link(models.Model):
     def __str__(self):
         return self.title
 
+
 link_serializer = openapi.Schema(
     type=openapi.TYPE_OBJECT,
     properties={
@@ -47,8 +47,10 @@ link_serializer = openapi.Schema(
         'url': openapi.Schema(type=openapi.TYPE_STRING, description="URL ссылки"),
         'image': openapi.Schema(type=openapi.TYPE_STRING, description="URL изображения для ссылки"),
         'type': openapi.Schema(type=openapi.TYPE_STRING, description="Тип ссылки (например, 'website')"),
-        'created_at': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_DATETIME, description="Дата и время создания ссылки"),
-        'updated_at': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_DATETIME, description="Дата и время последнего обновления ссылки"),
+        'created_at': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_DATETIME,
+                                     description="Дата и время создания ссылки"),
+        'updated_at': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_DATETIME,
+                                     description="Дата и время последнего обновления ссылки"),
     },
 )
 
@@ -57,8 +59,10 @@ collection_serializer = openapi.Schema(
     properties={
         'name': openapi.Schema(type=openapi.TYPE_STRING, description="Название коллекции"),
         'description': openapi.Schema(type=openapi.TYPE_STRING, description="Описание коллекции"),
-        'created_at': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_DATETIME, description="Дата и время создания коллекции"),
-        'updated_at': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_DATETIME, description="Дата и время последнего обновления коллекции"),
+        'created_at': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_DATETIME,
+                                     description="Дата и время создания коллекции"),
+        'updated_at': openapi.Schema(type=openapi.TYPE_STRING, format=openapi.FORMAT_DATETIME,
+                                     description="Дата и время последнего обновления коллекции"),
     },
 )
 

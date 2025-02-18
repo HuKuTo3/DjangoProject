@@ -1,13 +1,15 @@
-from rest_framework import viewsets, permissions, status
-from rest_framework.decorators import action, api_view, permission_classes
-from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework import viewsets, permissions, status
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.response import Response
+
 from .models import Link, Collection
 from .serializers import LinkSerializer, CollectionSerializer, UserSerializer
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
+
 
 @swagger_auto_schema(
     method='post',
@@ -31,6 +33,7 @@ def login_view(request):
         token, _ = Token.objects.get_or_create(user=user)
         return Response({'token': token.key})
     return Response({'error': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -93,13 +96,14 @@ class UserViewSet(viewsets.ModelViewSet):
         user = request.user
         old_password = request.data.get('old_password')
         new_password = request.data.get('new_password')
-        
+
         if not user.check_password(old_password):
             return Response({'error': 'Invalid old password'}, status=status.HTTP_400_BAD_REQUEST)
-            
+
         user.set_password(new_password)
         user.save()
         return Response({'message': 'Password changed successfully'})
+
 
 class LinkViewSet(viewsets.ModelViewSet):
     serializer_class = LinkSerializer
@@ -125,6 +129,7 @@ class LinkViewSet(viewsets.ModelViewSet):
     )
     def create(self, request, *args, **kwargs):
         return super().create(request, *args, **kwargs)
+
 
 class CollectionViewSet(viewsets.ModelViewSet):
     serializer_class = CollectionSerializer

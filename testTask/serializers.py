@@ -1,6 +1,8 @@
-from rest_framework import serializers
 from django.contrib.auth.models import User
+from rest_framework import serializers
+
 from .models import Link, Collection
+
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -18,11 +20,13 @@ class UserSerializer(serializers.ModelSerializer):
         )
         return user
 
+
 class LinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Link
         fields = ['id', 'url', 'title', 'description', 'created_at', 'user']
         read_only_fields = ['user']
+
 
 class CollectionSerializer(serializers.ModelSerializer):
     links = LinkSerializer(many=True, read_only=True)

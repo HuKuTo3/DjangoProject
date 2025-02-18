@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
+
 def fetch_link_data(url):
     try:
         response = requests.get(url, timeout=5)

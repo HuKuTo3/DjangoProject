@@ -1,9 +1,9 @@
 from django.contrib.auth.views import PasswordChangeDoneView
 from django.urls import path, include
-from django.contrib.auth import views as auth_views
 from rest_framework.routers import DefaultRouter
-from .views import *
+
 from .api_views import LinkViewSet, CollectionViewSet, UserViewSet, login_view
+from .views import *
 
 # Create a router and register our viewsets with it.
 router = DefaultRouter()
@@ -15,7 +15,7 @@ urlpatterns = [
     # API URLs
     path('', include(router.urls)),
     path('api/login/', login_view, name='api-login'),
-    
+
     # Existing URLs
     path('home', HomeView.as_view(), name='home'),
 
@@ -26,10 +26,7 @@ urlpatterns = [
          PasswordChangeDoneView.as_view(template_name='password_change_done.html'), name='password_change_done'),
 
     # Сброс пароля
-    path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
-    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
-    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('password_reset/', PasswordChangeView.as_view(), name='password_reset'),
 
     # Аутентификация
     path('login/', UserLoginHTMLView.as_view(), name='login'),
@@ -47,5 +44,6 @@ urlpatterns = [
     path('collections/create/', CollectionCreateView.as_view(), name='collection-create'),
     path('collections/<int:pk>/edit/', CollectionUpdateView.as_view(), name='collection-edit'),
     path('collections/<int:pk>/delete/', CollectionDeleteView.as_view(), name='collection-delete'),
-    path('collections/<int:collection_id>/remove-link/<int:link_id>/', CollectionRemoveLinkView.as_view(), name='collection-remove-link'),
+    path('collections/<int:collection_id>/remove-link/<int:link_id>/', CollectionRemoveLinkView.as_view(),
+         name='collection-remove-link'),
 ]
